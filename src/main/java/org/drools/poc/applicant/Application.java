@@ -4,12 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Builder
 @Setter
 @Getter
 public class Application {
-    private Date dateApplied;
+    private LocalDate dateApplied;
     private boolean valid;
 }

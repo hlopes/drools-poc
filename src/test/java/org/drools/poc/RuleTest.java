@@ -44,10 +44,10 @@ public class RuleTest {
     public void test2() {
         var session = KieServices.Factory.get().getKieClasspathContainer().newStatelessKieSession("ApplicantSession");
 
-        var applicant = new Applicant();
-
-        applicant.setName("Mr John Smith");
-        applicant.setAge(16);
+        var applicant = Applicant.builder()
+                .name("Mr John Smith")
+                .age(16)
+                .build();
 
         session.execute(applicant);
 

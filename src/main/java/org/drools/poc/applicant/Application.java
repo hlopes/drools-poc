@@ -1,24 +1,15 @@
 package org.drools.poc.applicant;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
+@Builder
+@Setter
+@Getter
 public class Application {
     private Date dateApplied;
     private boolean valid;
-
-    public Date getDateApplied() {
-        return dateApplied;
-    }
-
-    public void setDateApplied(Date dateApplied) {
-        this.dateApplied = dateApplied;
-    }
-
-    public boolean isValid() {
-        return valid;
-    }
-
-    public void setValid(boolean valid) {
-        this.valid = valid;
-    }
 }

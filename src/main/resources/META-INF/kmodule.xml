@@ -4,4 +4,7 @@
     <kbase packages="org.drools.poc.applicant">
         <ksession name="ApplicantSession" type="stateless"/>
     </kbase>
+    <kbase packages="org.drools.poc.fire">
+        <ksession name="FireSession"/>
+    </kbase>
 </kmodule>

@@ -4,15 +4,16 @@ package org.drools.poc;
 import lombok.extern.slf4j.Slf4j;
 import org.drools.poc.applicant.Applicant;
 import org.drools.poc.applicant.Application;
+import org.drools.poc.fire.Room;
+import org.drools.poc.fire.Sprinkler;
 import org.drools.ruleunits.api.RuleUnitInstance;
 import org.drools.ruleunits.api.RuleUnitProvider;
 import org.junit.Test;
 import org.kie.api.KieServices;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -44,7 +45,7 @@ public class RuleTest {
     }
 
     @Test
-    public void test2() {
+    public void testStateless() {
         var session = KieServices.Factory.get().getKieClasspathContainer().newStatelessKieSession("ApplicantSession");
 
         var applicant = Applicant.builder()
@@ -60,5 +61,24 @@ public class RuleTest {
 
         assertFalse(applicant.isValid());
         assertTrue(application.isValid());
+    }
+
+    @Test
+    public void testStateful() {
+        var kSession = KieServices.Factory.get().getKieClasspathContainer().newKieSession("FireSession");
+
+        var names = new String[]{"kitchen", "bedroom", "office", "livingroom"};
+        var name2room = new HashMap<String, Room>();
+
+        for (String name : names) {
+            var room = Room.builder().name(name).build();
+            name2room.put(name, room);
+            kSession.insert(room);
+
+            var sprinkler = Sprinkler.builder().room(room).build();
+            kSession.insert(sprinkler);
+        }
+
+        kSession.fireAllRules();
     }
 }

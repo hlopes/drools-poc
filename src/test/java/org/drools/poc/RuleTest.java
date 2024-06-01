@@ -1,16 +1,18 @@
 
 package org.drools.poc;
 
-import java.util.List;
-
-import org.drools.ruleunits.api.RuleUnitProvider;
+import org.drools.poc.applicant.Applicant;
 import org.drools.ruleunits.api.RuleUnitInstance;
+import org.drools.ruleunits.api.RuleUnitProvider;
 import org.junit.Test;
+import org.kie.api.KieServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static java.util.stream.Collectors.toList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class RuleTest {
@@ -22,8 +24,7 @@ public class RuleTest {
         LOG.info("Creating RuleUnit");
         MeasurementUnit measurementUnit = new MeasurementUnit();
 
-        RuleUnitInstance<MeasurementUnit> instance = RuleUnitProvider.get().createRuleUnitInstance(measurementUnit);
-        try {
+        try (RuleUnitInstance<MeasurementUnit> instance = RuleUnitProvider.get().createRuleUnitInstance(measurementUnit)) {
             LOG.info("Insert data");
             measurementUnit.getMeasurements().add(new Measurement("color", "red"));
             measurementUnit.getMeasurements().add(new Measurement("color", "green"));
@@ -36,8 +37,20 @@ public class RuleTest {
             assertTrue("contains red", measurementUnit.getControlSet().contains("red"));
             assertTrue("contains green", measurementUnit.getControlSet().contains("green"));
             assertTrue("contains blue", measurementUnit.getControlSet().contains("blue"));
-        } finally {
-            instance.close();
         }
+    }
+
+    @Test
+    public void test2() {
+        var session = KieServices.Factory.get().getKieClasspathContainer().newStatelessKieSession("ApplicantSession");
+
+        var applicant = new Applicant();
+
+        applicant.setName("Mr John Smith");
+        applicant.setAge(16);
+
+        session.execute(applicant);
+
+        assertFalse(applicant.isValid());
     }
 }

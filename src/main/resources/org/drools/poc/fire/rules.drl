@@ -3,22 +3,21 @@ package org.drools.poc.fire
 import org.drools.poc.fire.Fire
 import org.drools.poc.fire.Sprinkler
 import org.drools.poc.fire.Alarm
+import org.drools.poc.LoggingUtil
 
 rule "When there is a fire turn on the sprinkler"
 when
-  Fire($room : room)
-  $sprinkler : Sprinkler(room == $room, on == false)
+    Fire($room : room)
+    $sprinkler : Sprinkler(room == $room, on == false)
 then
-  modify($sprinkler) { setOn(true) };
-  System.out.println("Turn on the sprinkler for room "+$room.getName());
+    modify($sprinkler) { setOn(true) };
 end
 
 rule "Raise the alarm when we have one or more fires"
 when
     exists Fire()
 then
-    insert( new Alarm() );
-    System.out.println( "Raise the alarm" );
+    insert(new Alarm());
 end
 
 rule "Cancel the alarm when all the fires have gone"
@@ -26,8 +25,7 @@ when
     not Fire()
     $alarm : Alarm()
 then
-    delete( $alarm );
-    System.out.println( "Cancel the alarm" );
+    delete($alarm);
 end
 
 
@@ -36,5 +34,5 @@ when
     not Alarm()
     not Sprinkler( on == true )
 then
-    System.out.println( "Everything is ok" );
+    LoggingUtil.info( "Everything is ok" );
 end
